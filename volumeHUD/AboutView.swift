@@ -155,7 +155,8 @@ struct AboutView: View {
 
                             Toggle("Brightness HUD", isOn: $brightnessEnabled)
                                 .labelsHidden()
-                                .toggleStyle(SwitchToggleStyle(tint: .accentColor))
+                                .toggleStyle(.switch)
+                                .tint(.accentColor)
                                 .scaleEffect(0.8)
                                 .onChange(of: brightnessEnabled) { oldValue, newValue in
                                     logger.debug("Brightness setting changed from \(oldValue) to \(newValue).")
@@ -196,7 +197,8 @@ struct AboutView: View {
 
                         Toggle("HUD Follows Mouse", isOn: $volumeHUDFollowsMouse)
                             .labelsHidden()
-                            .toggleStyle(SwitchToggleStyle(tint: .accentColor))
+                            .toggleStyle(.switch)
+                            .tint(.accentColor)
                             .scaleEffect(0.8)
                             .onChange(of: volumeHUDFollowsMouse) { oldValue, newValue in
                                 logger.debug("Volume HUD display setting changed from \(oldValue) to \(newValue).")
@@ -235,7 +237,8 @@ struct AboutView: View {
 
                         Toggle("Relative HUD Position", isOn: $useRelativePositioning)
                             .labelsHidden()
-                            .toggleStyle(SwitchToggleStyle(tint: .accentColor))
+                            .toggleStyle(.switch)
+                            .tint(.accentColor)
                             .scaleEffect(0.8)
                             .onChange(of: useRelativePositioning) { oldValue, newValue in
                                 logger.debug("Relative positioning setting changed from \(oldValue) to \(newValue).")
@@ -395,7 +398,8 @@ private struct LoginItemSetting: View {
                     set: { loginItemManager.setEnabled($0) },
                 ))
                 .labelsHidden()
-                .toggleStyle(SwitchToggleStyle(tint: .accentColor))
+                .toggleStyle(.switch)
+                .tint(.accentColor)
                 .scaleEffect(0.8)
             }
         }
