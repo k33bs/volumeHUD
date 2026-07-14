@@ -112,6 +112,13 @@ class HUDController: ObservableObject {
     private func updateWindowPosition(for hudType: HUDType? = nil) {
         guard let window = hudWindow else { return }
 
+        // Screens can briefly disappear during display reconfiguration (lid close, sleep/wake),
+        // and every fallback below assumes at least one exists. Skip and wait for the next update.
+        guard !NSScreen.screens.isEmpty else {
+            logger.warning("No screens available; skipping HUD window positioning.")
+            return
+        }
+
         let windowSize = NSSize(width: 200, height: 200)
 
         // Brightness HUD always shows on built-in display (since that's what it controls). Volume
