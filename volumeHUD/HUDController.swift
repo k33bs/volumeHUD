@@ -97,13 +97,15 @@ class HUDController: ObservableObject {
     private func handleDisplayConfigurationChange() {
         logger.debug("Display configuration changed, updating HUD position.")
 
-        // If the HUD window exists, update its position
+        // If the HUD window exists, update its position. Pass the last shown HUD type so a
+        // visible brightness HUD stays on the built-in display instead of the volume screen.
         if hudWindow != nil {
-            updateWindowPosition()
+            updateWindowPosition(for: lastShownHUDType)
             // Re-apply after a short delay to handle transient frame/layout updates macOS screen
             // geometry may still be adjusting after didChangeScreenParameters fires
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) { [weak self] in
-                self?.updateWindowPosition()
+                guard let self else { return }
+                updateWindowPosition(for: lastShownHUDType)
             }
         }
     }
