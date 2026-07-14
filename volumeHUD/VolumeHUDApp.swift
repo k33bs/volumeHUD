@@ -490,12 +490,10 @@ struct VolumeHUDApp: App {
 
     @available(macOS 26.0, *)
     var body: some Scene {
-        WindowGroup {
+        // A Settings scene satisfies SwiftUI without creating a window at launch, unlike an
+        // empty WindowGroup. The app has no menu bar, so it can never actually be opened.
+        Settings {
             EmptyView()
-                .frame(width: 0, height: 0)
         }
-        .windowStyle(.hiddenTitleBar)
-        .defaultSize(width: 0, height: 0)
-        .windowResizability(.contentSize)
     }
 }
