@@ -153,7 +153,8 @@ struct AboutView: View {
 
                             Spacer()
 
-                            Toggle("", isOn: $brightnessEnabled)
+                            Toggle("Brightness HUD", isOn: $brightnessEnabled)
+                                .labelsHidden()
                                 .toggleStyle(SwitchToggleStyle(tint: .accentColor))
                                 .scaleEffect(0.8)
                                 .onChange(of: brightnessEnabled) { oldValue, newValue in
@@ -193,7 +194,8 @@ struct AboutView: View {
 
                         Spacer()
 
-                        Toggle("", isOn: $volumeHUDFollowsMouse)
+                        Toggle("HUD Follows Mouse", isOn: $volumeHUDFollowsMouse)
+                            .labelsHidden()
                             .toggleStyle(SwitchToggleStyle(tint: .accentColor))
                             .scaleEffect(0.8)
                             .onChange(of: volumeHUDFollowsMouse) { oldValue, newValue in
@@ -231,7 +233,8 @@ struct AboutView: View {
 
                         Spacer()
 
-                        Toggle("", isOn: $useRelativePositioning)
+                        Toggle("Relative HUD Position", isOn: $useRelativePositioning)
+                            .labelsHidden()
                             .toggleStyle(SwitchToggleStyle(tint: .accentColor))
                             .scaleEffect(0.8)
                             .onChange(of: useRelativePositioning) { oldValue, newValue in
@@ -387,10 +390,11 @@ private struct LoginItemSetting: View {
 
                 Spacer()
 
-                Toggle("", isOn: Binding(
+                Toggle("Open at Login", isOn: Binding(
                     get: { loginItemManager.isEnabled },
                     set: { loginItemManager.setEnabled($0) },
                 ))
+                .labelsHidden()
                 .toggleStyle(SwitchToggleStyle(tint: .accentColor))
                 .scaleEffect(0.8)
             }
