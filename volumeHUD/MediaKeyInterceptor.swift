@@ -35,7 +35,7 @@ final class MediaKeyInterceptor {
     /// Static callback for CGEvent tap. Bridges to instance method.
     private static let eventTapCallback: CGEventTapCallBack = { _, type, cgEvent, userInfo in
         guard let userInfo else {
-            return Unmanaged.passRetained(cgEvent)
+            return Unmanaged.passUnretained(cgEvent)
         }
 
         let interceptor = Unmanaged<MediaKeyInterceptor>.fromOpaque(userInfo).takeUnretainedValue()
@@ -46,12 +46,12 @@ final class MediaKeyInterceptor {
             if let tap = interceptor.eventTap {
                 CGEvent.tapEnable(tap: tap, enable: true)
             }
-            return Unmanaged.passRetained(cgEvent)
+            return Unmanaged.passUnretained(cgEvent)
         }
 
         // Only handle system-defined events
         guard type.rawValue == 14 else {
-            return Unmanaged.passRetained(cgEvent)
+            return Unmanaged.passUnretained(cgEvent)
         }
 
         // Process the event and determine if we should consume it
@@ -212,7 +212,7 @@ final class MediaKeyInterceptor {
             nsEvent.type == .systemDefined,
             nsEvent.subtype.rawValue == 8 else
         {
-            return Unmanaged.passRetained(cgEvent)
+            return Unmanaged.passUnretained(cgEvent)
         }
 
         let data1 = nsEvent.data1
@@ -222,11 +222,11 @@ final class MediaKeyInterceptor {
 
         // 0x0A = key down, 0x0B = key up Only handle key down events
         guard keyState == 0x0A else {
-            return Unmanaged.passRetained(cgEvent)
+            return Unmanaged.passUnretained(cgEvent)
         }
 
         guard let keyType = NXKeyType(rawValue: keyCode) else {
-            return Unmanaged.passRetained(cgEvent)
+            return Unmanaged.passUnretained(cgEvent)
         }
 
         // Extract modifier flags for fine control detection
@@ -251,7 +251,7 @@ final class MediaKeyInterceptor {
             )
             // Check if volume interception is still working
             guard volumeInterceptionWorking else {
-                return Unmanaged.passRetained(cgEvent) // Pass through to system
+                return Unmanaged.passUnretained(cgEvent) // Pass through to system
             }
 
             // Handle the key press on the main actor
@@ -271,7 +271,7 @@ final class MediaKeyInterceptor {
             // Only intercept brightness if the brightness HUD feature is enabled and brightness
             // interception is still working.
             guard brightnessHUDEnabled, brightnessInterceptionWorking else {
-                return Unmanaged.passRetained(cgEvent) // Pass through to system
+                return Unmanaged.passUnretained(cgEvent) // Pass through to system
             }
 
             // Handle the key press on the main actor.
