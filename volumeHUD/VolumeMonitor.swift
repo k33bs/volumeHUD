@@ -40,7 +40,6 @@ class VolumeMonitor: ObservableObject, @unchecked Sendable {
     private var previousMuteState: Bool = false
     #if !SANDBOX
         private var systemEventMonitor: Any?
-        private var keyEventMonitor: Any?
         private var eventTap: CFMachPort?
         private var eventTapRunLoopSource: CFRunLoopSource?
         private var hidEventTap: CFMachPort?
@@ -374,9 +373,6 @@ class VolumeMonitor: ObservableObject, @unchecked Sendable {
                 }
             }
 
-            // Also monitor key events to catch keys that may not generate system-defined events.
-            keyEventMonitor = NSEvent.addGlobalMonitorForEvents(matching: [.keyDown, .keyUp]) { _ in }
-
             startEventTap()
 
             logger.debug("Started monitoring system-defined events for volume keys.")
@@ -388,11 +384,6 @@ class VolumeMonitor: ObservableObject, @unchecked Sendable {
                 systemEventMonitor = nil
                 logger.debug("Stopped monitoring system-defined events.")
             }
-            if let keyMonitor = keyEventMonitor {
-                NSEvent.removeMonitor(keyMonitor)
-                keyEventMonitor = nil
-            }
-
             stopEventTap()
         }
 
