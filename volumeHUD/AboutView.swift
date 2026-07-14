@@ -153,8 +153,10 @@ struct AboutView: View {
 
                             Spacer()
 
-                            Toggle("", isOn: $brightnessEnabled)
-                                .toggleStyle(SwitchToggleStyle(tint: .accentColor))
+                            Toggle("Brightness HUD", isOn: $brightnessEnabled)
+                                .labelsHidden()
+                                .toggleStyle(.switch)
+                                .tint(.accentColor)
                                 .scaleEffect(0.8)
                                 .onChange(of: brightnessEnabled) { oldValue, newValue in
                                     logger.debug("Brightness setting changed from \(oldValue) to \(newValue).")
@@ -193,8 +195,10 @@ struct AboutView: View {
 
                         Spacer()
 
-                        Toggle("", isOn: $volumeHUDFollowsMouse)
-                            .toggleStyle(SwitchToggleStyle(tint: .accentColor))
+                        Toggle("HUD Follows Mouse", isOn: $volumeHUDFollowsMouse)
+                            .labelsHidden()
+                            .toggleStyle(.switch)
+                            .tint(.accentColor)
                             .scaleEffect(0.8)
                             .onChange(of: volumeHUDFollowsMouse) { oldValue, newValue in
                                 logger.debug("Volume HUD display setting changed from \(oldValue) to \(newValue).")
@@ -231,8 +235,10 @@ struct AboutView: View {
 
                         Spacer()
 
-                        Toggle("", isOn: $useRelativePositioning)
-                            .toggleStyle(SwitchToggleStyle(tint: .accentColor))
+                        Toggle("Relative HUD Position", isOn: $useRelativePositioning)
+                            .labelsHidden()
+                            .toggleStyle(.switch)
+                            .tint(.accentColor)
                             .scaleEffect(0.8)
                             .onChange(of: useRelativePositioning) { oldValue, newValue in
                                 logger.debug("Relative positioning setting changed from \(oldValue) to \(newValue).")
@@ -387,11 +393,13 @@ private struct LoginItemSetting: View {
 
                 Spacer()
 
-                Toggle("", isOn: Binding(
+                Toggle("Open at Login", isOn: Binding(
                     get: { loginItemManager.isEnabled },
                     set: { loginItemManager.setEnabled($0) },
                 ))
-                .toggleStyle(SwitchToggleStyle(tint: .accentColor))
+                .labelsHidden()
+                .toggleStyle(.switch)
+                .tint(.accentColor)
                 .scaleEffect(0.8)
             }
         }

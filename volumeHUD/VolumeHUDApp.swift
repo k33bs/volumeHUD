@@ -82,6 +82,14 @@ class AppDelegate: NSObject, NSApplicationDelegate, @preconcurrency UNUserNotifi
         // Keep the app headless and out of the Dock
         NSApplication.shared.setActivationPolicy(.accessory)
 
+        // Register preference defaults so first-run behavior matches the settings UI, which
+        // shows these as on. @AppStorage defaults are never written to disk, and reading an
+        // unset key through UserDefaults directly would return false otherwise.
+        UserDefaults.standard.register(defaults: [
+            "volumeHUDFollowsMouse": true,
+            "useRelativePositioning": true,
+        ])
+
         // Set up the notifications delegate BEFORE scheduling any notifications
         UNUserNotificationCenter.current().delegate = self
 
@@ -250,7 +258,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, @preconcurrency UNUserNotifi
 
         let task = Process()
         task.executableURL = URL(fileURLWithPath: "/usr/bin/pgrep")
-        task.arguments = ["-f", executableName]
+        // Match the process name exactly; -f would also match unrelated processes that merely
+        // have the app name somewhere in their arguments, like an editor with the project open
+        task.arguments = ["-x", executableName]
 
         let pipe = Pipe()
         task.standardOutput = pipe
@@ -480,12 +490,10 @@ struct VolumeHUDApp: App {
 
     @available(macOS 26.0, *)
     var body: some Scene {
-        WindowGroup {
+        // A Settings scene satisfies SwiftUI without creating a window at launch, unlike an
+        // empty WindowGroup. The app has no menu bar, so it can never actually be opened.
+        Settings {
             EmptyView()
-                .frame(width: 0, height: 0)
         }
-        .windowStyle(.hiddenTitleBar)
-        .defaultSize(width: 0, height: 0)
-        .windowResizability(.contentSize)
     }
 }
