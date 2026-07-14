@@ -258,7 +258,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, @preconcurrency UNUserNotifi
 
         let task = Process()
         task.executableURL = URL(fileURLWithPath: "/usr/bin/pgrep")
-        task.arguments = ["-f", executableName]
+        // Match the process name exactly; -f would also match unrelated processes that merely
+        // have the app name somewhere in their arguments, like an editor with the project open
+        task.arguments = ["-x", executableName]
 
         let pipe = Pipe()
         task.standardOutput = pipe
