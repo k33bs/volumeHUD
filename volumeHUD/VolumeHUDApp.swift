@@ -82,6 +82,14 @@ class AppDelegate: NSObject, NSApplicationDelegate, @preconcurrency UNUserNotifi
         // Keep the app headless and out of the Dock
         NSApplication.shared.setActivationPolicy(.accessory)
 
+        // Register preference defaults so first-run behavior matches the settings UI, which
+        // shows these as on. @AppStorage defaults are never written to disk, and reading an
+        // unset key through UserDefaults directly would return false otherwise.
+        UserDefaults.standard.register(defaults: [
+            "volumeHUDFollowsMouse": true,
+            "useRelativePositioning": true,
+        ])
+
         // Set up the notifications delegate BEFORE scheduling any notifications
         UNUserNotificationCenter.current().delegate = self
 
