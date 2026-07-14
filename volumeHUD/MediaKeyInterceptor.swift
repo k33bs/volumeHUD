@@ -99,8 +99,9 @@ final class MediaKeyInterceptor {
     private var getBrightnessFunc: (@convention(c) (CGDirectDisplayID, UnsafeMutablePointer<Float>) -> kern_return_t)?
     private var setBrightnessFunc: (@convention(c) (CGDirectDisplayID, Float) -> kern_return_t)?
 
-    /// Whether brightness HUD feature is enabled in settings
-    private var brightnessHUDEnabled: Bool {
+    /// Whether brightness HUD feature is enabled in settings. Nonisolated so the event tap
+    /// callback can check it before consuming brightness keys; UserDefaults is thread-safe.
+    private nonisolated var brightnessHUDEnabled: Bool {
         UserDefaults.standard.bool(forKey: "brightnessEnabled")
     }
 
@@ -269,7 +270,7 @@ final class MediaKeyInterceptor {
         case .brightnessUp, .brightnessDown:
             // Only intercept brightness if the brightness HUD feature is enabled and brightness
             // interception is still working.
-            guard brightnessInterceptionWorking else {
+            guard brightnessHUDEnabled, brightnessInterceptionWorking else {
                 return Unmanaged.passRetained(cgEvent) // Pass through to system
             }
 
