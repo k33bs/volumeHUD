@@ -128,6 +128,11 @@ final class MediaKeyInterceptor {
         volumeInterceptionWorking = true
         brightnessInterceptionWorking = true
 
+        // Reload DisplayServices if a previous stop() closed the handle
+        if displayServicesHandle == nil {
+            loadDisplayServices()
+        }
+
         // Check accessibility permissions first
         guard AXIsProcessTrusted() else {
             logger.warning("MediaKeyInterceptor: Accessibility permissions not granted. Cannot intercept media keys.")
@@ -195,10 +200,14 @@ final class MediaKeyInterceptor {
         eventTap = nil
         isRunning = false
 
-        // Close DisplayServices handle
+        // Close DisplayServices handle and drop the function pointers, which would otherwise
+        // dangle into the unloaded library
         if let handle = displayServicesHandle {
             dlclose(handle)
             displayServicesHandle = nil
+            canChangeBrightnessFunc = nil
+            getBrightnessFunc = nil
+            setBrightnessFunc = nil
         }
 
         logger.debug("Stopped intercepting media keys.")
